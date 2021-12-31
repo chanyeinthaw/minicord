@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider             = "prisma-client-js"
+  referentialIntegrity = "foreignKeys"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Visa {
+  id     Int     @id @default(autoincrement())
+  roleId String  @unique
+  isRoot Boolean @default(true)
+
+  spaces VisasOnSpaces[]
+}
+
+model Space {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roleId String @unique
+
+  exclusiveRoles ExclusiveRole[]
+  categories     Category[]
+  visas  VisasOnSpaces[]
+}
+
+model VisasOnSpaces {
+  visa    Visa  @relation(fields: [visaId], references: [id], onDelete: Cascade)
+  visaId  Int
+  space   Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  spaceId Int
+
+  @@id([visaId, spaceId])
+}
+
+model ExclusiveRole {
+  spaceId Int
+  space   Space  @relation(fields: [spaceId], references: [id])
+  roleId  String
+
+  @@id([spaceId, roleId])
+}
+
+model Category {
+  discordId String
+  spaceId   Int
+  space     Space  @relation(fields: [spaceId], references: [id])
+  order     Int    @default(0)
+
+  permissions Permission[]
+
+  @@id([spaceId, discordId])
+}
+
+model Permission {
+  spaceId           Int
+  categoryDiscordId String
+
+  roleId   String
+  category Category @relation(fields: [spaceId, categoryDiscordId], references: [spaceId, discordId])
+  type     Int
+
+  @@id([categoryDiscordId, spaceId, roleId, type])
+}
