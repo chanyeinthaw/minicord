@@ -1,19 +1,33 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "outDir": "dist",
-    "target": "es2017",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "target": "es2018",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true
-  },
-  "include": ["src/**/*.ts"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "strict": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src",
+//    "paths": {
+//      "@root/*": ["*"],
+//      "@config/*" : ["config/*"],
+//      "@system/*": ["system/*"],
+//      "@api/*": ["api/*"],
+//      "@error-handling/*": ["system/error-handling/*"],
+//      "@models/*": ["data/models/*"],
+//      "@queries/*": ["data/queries/*"]
+//    }
+  }
 }
