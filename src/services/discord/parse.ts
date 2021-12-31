@@ -13,7 +13,7 @@ export function parseCommand(message: string) {
             args = argsList.reduce((acc, cv) => {
                 let arg = cv.split(' ')
                 if (arg.length > 1) {
-                    acc[arg[0]] = arg[1]
+                    acc[arg[0]] = arg.splice(1).join(' ')
                 }
                 return acc
             }, {})
