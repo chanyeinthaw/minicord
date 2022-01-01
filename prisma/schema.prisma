@@ -13,7 +13,7 @@ datasource db {
 
 model Visa {
   id     Int     @id @default(autoincrement())
-  roleId String  @unique
+  roleId String?  @unique
   isRoot Boolean @default(true)
 
   spaces VisasOnSpaces[]
@@ -22,7 +22,7 @@ model Visa {
 model Space {
   id     Int    @id @default(autoincrement())
   name   String
-  roleId String @unique
+  roleId String? @unique
 
   exclusiveRoles ExclusiveRole[]
   categories     Category[]
