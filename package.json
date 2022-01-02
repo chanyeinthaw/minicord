@@ -2,15 +2,18 @@
   "name": "minicord",
   "private": true,
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "prisma generate; tsc",
-    "start": "cross-env NODE_ENV=production node build/index.js"
+    "start": "cross-env NODE_ENV=production node -r tsconfig-paths/register build/index.js"
   },
   "dependencies": {
     "@prisma/client": "3.7.0",
+    "@types/glob": "^7.2.0",
     "cross-env": "^7.0.3",
     "discord.js": "^13.5.0",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "glob": "^7.2.0",
+    "tsconfig-paths": "^3.12.0"
   },
   "devDependencies": {
     "@types/node": "17.0.5",

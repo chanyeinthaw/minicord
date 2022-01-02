@@ -8,7 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
     "outDir": "./build",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "noImplicitAny": false,
     "removeComments": true,
@@ -19,15 +19,10 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src",
-//    "paths": {
-//      "@root/*": ["*"],
-//      "@config/*" : ["config/*"],
-//      "@system/*": ["system/*"],
-//      "@api/*": ["api/*"],
-//      "@error-handling/*": ["system/error-handling/*"],
-//      "@models/*": ["data/models/*"],
-//      "@queries/*": ["data/queries/*"]
-//    }
+    "baseUrl": ".",
+    "paths": {
+      "@lib/*": ["lib/*"],
+      "@app/*": ["src/*"]
+    }
   }
 }
