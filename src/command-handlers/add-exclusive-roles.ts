@@ -1,6 +1,6 @@
-import {app} from "@app/index";
+import {CommandContext} from "@lib/mini-command";
 
-app.on('add-exclusive-roles', async (ctx) => {
+export default async function addExclusiveRole(ctx: CommandContext){
     let [spaceRoleId] = ctx.args as [string]
     let roles = (ctx.args as string[])
 
@@ -44,4 +44,4 @@ app.on('add-exclusive-roles', async (ctx) => {
     })
 
     return ctx.message.reply(`Roles: ${roles.map(roleId => `<@&${roleId}>`).join(' ')} added to space ${space.name}<&@${spaceRoleId}>.`)
-})
+}

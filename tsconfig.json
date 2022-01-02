@@ -22,7 +22,8 @@
     "baseUrl": ".",
     "paths": {
       "@lib/*": ["lib/*"],
-      "@app/*": ["src/*"]
+      "@app/*": ["src/*"],
+      "@handlers/*": ["src/command-handlers/*"]
     }
   }
 }

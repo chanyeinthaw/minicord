@@ -1,6 +1,6 @@
-import {app} from "@app/index";
+import {CommandContext} from "@lib/mini-command";
 
-app.on('create-space', async (ctx) => {
+export default async function createSpace(ctx: CommandContext) {
     let [name] = ctx.args as [string]
 
     let space = await ctx.prisma.space.create({
@@ -21,4 +21,4 @@ app.on('create-space', async (ctx) => {
     })
 
     return ctx.message.reply(`Space ${space.name} created. Role <@&${role.id}>.`)
-})
+}
