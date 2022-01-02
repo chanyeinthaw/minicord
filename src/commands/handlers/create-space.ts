@@ -21,5 +21,5 @@ export default async function createSpace(ctx: CommandContext) {
         }
     })
 
-    return ctx.message.reply(`\`Space ${space.name} created. Role <@&${role.id}>.\``)
+    return ctx.message.reply(`\`Space ${space.name} created.\`\nRole <@&${role.id}>`)
 }

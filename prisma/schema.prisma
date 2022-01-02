@@ -60,6 +60,7 @@ model Category {
 
 model CategoryDefaultPermission {
   roleId String
+  permission String
   type Int
   spaceId Int
   space Space @relation(fields: [spaceId], references: [id])
@@ -70,6 +71,7 @@ model CategoryDefaultPermission {
 model Permission {
   spaceId           Int
   categoryDiscordId String
+  permission String
 
   roleId   String
   category Category @relation(fields: [spaceId, categoryDiscordId], references: [spaceId, discordId])

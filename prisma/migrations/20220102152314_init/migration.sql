@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "Visa" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "roleId" TEXT NOT NULL,
+    "roleId" TEXT,
     "isRoot" BOOLEAN NOT NULL DEFAULT true
 );
 
@@ -9,7 +9,7 @@ CREATE TABLE "Visa" (
 CREATE TABLE "Space" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
-    "roleId" TEXT NOT NULL
+    "roleId" TEXT
 );
 
 -- CreateTable
@@ -42,9 +42,21 @@ CREATE TABLE "Category" (
 );
 
 -- CreateTable
+CREATE TABLE "CategoryDefaultPermission" (
+    "roleId" TEXT NOT NULL,
+    "permission" TEXT NOT NULL,
+    "type" INTEGER NOT NULL,
+    "spaceId" INTEGER NOT NULL,
+
+    PRIMARY KEY ("roleId", "spaceId", "type"),
+    CONSTRAINT "CategoryDefaultPermission_spaceId_fkey" FOREIGN KEY ("spaceId") REFERENCES "Space" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Permission" (
     "spaceId" INTEGER NOT NULL,
     "categoryDiscordId" TEXT NOT NULL,
+    "permission" TEXT NOT NULL,
     "roleId" TEXT NOT NULL,
     "type" INTEGER NOT NULL,
 
