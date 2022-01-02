@@ -7,7 +7,7 @@ app.on('add-exclusive-roles', addExclusiveRole)
     .alias('era')
 
 app.on('get-exclusive-roles', getExclusiveRoles)
-    .alias('erg')
+    .alias('er')
 
 app.on('remove-exclusive-roles', removeExclusiveRoles)
     .next(getExclusiveRoles)
