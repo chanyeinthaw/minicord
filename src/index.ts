@@ -6,6 +6,10 @@ dotenv.config({ path: process.cwd() + '/.env' + env })
 
 export const app = new MiniCommand(process.env.DISCORD_BOT_TOKEN!)
 
-require('./commands')
+app.middleware(
+    require('@middlewares/auth').default
+)
+
+require('./registry')
 
 app.start()

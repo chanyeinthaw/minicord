@@ -18,6 +18,7 @@ export default class MiniCommand {
     private readonly prisma: PrismaClient
     private currentCommand: string = ''
 
+    private defaultMiddlewares: HandlerFn[] = []
     private commandAliases: Map<string, string> = new Map<string, string>()
     private commandHandlers: Map<string, HandlerFn[]> = new Map<string, HandlerFn[]>()
 
@@ -33,6 +34,10 @@ export default class MiniCommand {
         })
 
         this.prisma = new PrismaClient()
+    }
+
+    public middleware(...handlers: HandlerFn[]) {
+        this.defaultMiddlewares.push(...handlers)
     }
 
     public on(command: string, handler: HandlerFn) {
@@ -94,6 +99,8 @@ export default class MiniCommand {
             args: command?.args,
             forwardedData: {}
         }
+
+        handlers.unshift(...this.defaultMiddlewares)
 
         for(let handler of handlers) {
             await handler(context)

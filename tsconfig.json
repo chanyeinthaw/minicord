@@ -23,7 +23,8 @@
     "paths": {
       "@lib/*": ["lib/*"],
       "@app/*": ["src/*"],
-      "@handlers/*": ["src/command-handlers/*"]
+      "@handlers/*": ["src/commands/handlers/*"],
+      "@middlewares/*": ["src/commands/middlewares/*"]
     }
   }
 }
