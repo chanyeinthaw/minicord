@@ -1,6 +1,6 @@
 import {CommandContext} from "@lib/mini-command";
 
-export default async function addExclusiveRole(ctx: CommandContext){
+export async function addExclusiveRole(ctx: CommandContext){
     let [spaceRoleId] = ctx.args as [string]
     let roles = (ctx.args as string[])
 

@@ -1,6 +1,6 @@
 import {CommandContext} from "@lib/mini-command";
 
-export default async function getExclusiveRoles(ctx: CommandContext){
+export async function getExclusiveRoles(ctx: CommandContext){
     let [spaceRoleId] = ctx.args as [string]
 
     let space = await ctx.prisma.space.findFirst({
