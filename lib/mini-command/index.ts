@@ -116,7 +116,7 @@ export default class MiniCommand {
             this.onMessage(message)
                 .then()
                 .catch(error => {
-                    message.reply(error.message)
+                    message.reply(`\`${error.message}\``)
                 })
         })
     }

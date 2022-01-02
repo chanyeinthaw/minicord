@@ -41,5 +41,5 @@ export default async function addExclusiveRole(ctx: CommandContext){
         }
     })
 
-    return ctx.message.reply(`Roles added.`)
+    return ctx.message.reply(`\`Roles added.\``)
 }
