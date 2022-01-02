@@ -27,6 +27,7 @@ model Space {
   exclusiveRoles ExclusiveRole[]
   categories     Category[]
   visas  VisasOnSpaces[]
+  categoryDefaultPermissions CategoryDefaultPermission[]
 }
 
 model VisasOnSpaces {
@@ -55,6 +56,15 @@ model Category {
   permissions Permission[]
 
   @@id([spaceId, discordId])
+}
+
+model CategoryDefaultPermission {
+  roleId String
+  type Int
+  spaceId Int
+  space Space @relation(fields: [spaceId], references: [id])
+
+  @@id([roleId, spaceId, type])
 }
 
 model Permission {
