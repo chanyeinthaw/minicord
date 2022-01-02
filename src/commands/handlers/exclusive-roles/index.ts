@@ -1,14 +1,37 @@
 import {app} from "@app/index";
-import {addExclusiveRole} from "./add-exclusive-roles";
-import {getExclusiveRoles} from "./get-exclusive-roles";
-import {removeExclusiveRoles} from "./remove-exclusive-roles";
+import add from "./add";
+import get from "./get";
+import remove from "./remove";
 
-app.on('add-exclusive-roles', addExclusiveRole)
-    .alias('era')
+app.on('exclusive-roles', async ctx => {
+    if (ctx.args.length < 2) throw new Error('Invalid args!')
+    let [spaceRoleId, subCmd, ...args] = ctx.args as string[]
 
-app.on('get-exclusive-roles', getExclusiveRoles)
-    .alias('er')
+    let space = await ctx.prisma.space.findFirst({
+        where: {
+            roleId: {
+                equals: spaceRoleId ?? null
+            },
+        },
+        select: {
+            id: true,
+            name: true,
+            exclusiveRoles: {
+                select: {
+                    roleId: true
+                }
+            }
+        }
+    })
+    if (!space) throw new Error('Invalid space!')
 
-app.on('remove-exclusive-roles', removeExclusiveRoles)
-    .next(getExclusiveRoles)
-    .alias('err')
+    ctx.args = [ spaceRoleId, ...args ]
+
+    switch (subCmd) {
+        case 'remove':
+        case 'rm': return remove(ctx)
+        case 'ls':
+        case 'list': return get(ctx, space)
+        case 'add': return remove(ctx)
+    }
+}).alias('er')

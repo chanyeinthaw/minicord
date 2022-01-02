@@ -1,26 +1,9 @@
 import {CommandContext} from "@lib/mini-command";
 
-export async function addExclusiveRole(ctx: CommandContext){
+export default async function addExclusiveRole(ctx: CommandContext, space: any){
+    if (ctx.args.length < 2) throw new Error('Invalid args!')
     let [spaceRoleId] = ctx.args as [string]
     let roles = (ctx.args as string[])
-
-    let space = await ctx.prisma.space.findFirst({
-        where: {
-            roleId: {
-                equals: spaceRoleId ?? null
-            },
-        },
-        select: {
-            id: true,
-            name: true,
-            exclusiveRoles: {
-                select: {
-                    roleId: true
-                }
-            }
-        }
-    })
-    if (!space) throw new Error('Invalid space!')
 
     let discordRoles = await ctx.guild?.roles.cache.filter(role => {
         return roles.indexOf(role.id) >= 0
