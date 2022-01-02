@@ -19,8 +19,8 @@ export default class MiniCommand {
     private currentCommand: string = ''
 
     private defaultMiddlewares: HandlerFn[] = []
-    private commandAliases: Map<string, string> = new Map<string, string>()
-    private commandHandlers: Map<string, HandlerFn[]> = new Map<string, HandlerFn[]>()
+    private commandAliases: Record<string, string> = {}
+    private commandHandlers: Record<string, HandlerFn[]> = {}
 
     public constructor(private token: string) {
         this.client = new Client({
@@ -81,7 +81,7 @@ export default class MiniCommand {
         if (!command) throw error()
 
         let handlers: HandlerFn[]
-        if (!this.commandHandlers.has(command?.command)) {
+        if (!this.commandHandlers.hasOwnProperty(command?.command)) {
             let aliasedCommand = this.commandAliases[command?.command]
 
             handlers = this.commandHandlers[aliasedCommand]
