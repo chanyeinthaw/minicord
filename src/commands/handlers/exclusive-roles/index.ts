@@ -32,6 +32,6 @@ app.on('exclusive-roles', async ctx => {
         case 'rm': return remove(ctx)
         case 'ls':
         case 'list': return get(ctx, space)
-        case 'add': return remove(ctx)
+        case 'add': return add(ctx, space)
     }
 }).alias('er')
