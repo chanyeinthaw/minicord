@@ -1,12 +1,6 @@
-import {CommandContext} from "../services/discord";
+import {app} from "@app/index";
 
-/**
- * Command
- *
- * create-space name:string
- */
-
-export async function handle(ctx: CommandContext) {
+app.on('create-space', async (ctx) => {
     let [name] = ctx.args as [string]
 
     let space = await ctx.prisma.space.create({
@@ -26,5 +20,5 @@ export async function handle(ctx: CommandContext) {
         }
     })
 
-    return ctx.message.reply(`Space ${space.name} created. Role <@&${role.id}>`)
-}
+    return ctx.message.reply(`Space ${space.name} created. Role <@&${role.id}>.`)
+})
