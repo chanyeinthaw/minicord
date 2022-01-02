@@ -5,9 +5,12 @@ export async function getExclusiveRoles(ctx: CommandContext){
 
     let space = await ctx.prisma.space.findFirst({
         where: {
-            roleId: spaceRoleId,
+            roleId: {
+                equals: spaceRoleId ?? null
+            },
         },
         select: {
+            id: true,
             exclusiveRoles: {
                 select: {
                     roleId: true
