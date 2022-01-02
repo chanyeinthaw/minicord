@@ -1,4 +1,5 @@
 import {CommandContext} from "@lib/mini-command";
+import {MessageEmbed} from "discord.js";
 
 export async function getExclusiveRoles(ctx: CommandContext){
     let [spaceRoleId] = ctx.args as [string]
@@ -34,5 +35,12 @@ export async function getExclusiveRoles(ctx: CommandContext){
         }
     }).then()
 
-    return ctx.message.reply(`Channel exclusive roles -\n${exclusiveRoles.map(r => `<@&${r}>`).join('\n')}`)
+    return ctx.message.reply({
+        embeds: [
+            new MessageEmbed({
+                title: 'Channel exclusive roles',
+                description: `${exclusiveRoles.map(r => `<@&${r}>`).join('\n')}`
+            })
+        ]
+    })
 }
