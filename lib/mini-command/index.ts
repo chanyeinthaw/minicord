@@ -17,6 +17,8 @@ export default class MiniCommand {
     private readonly client: Client
     private readonly prisma: PrismaClient
     private currentCommand: string = ''
+
+    private commandAliases: Map<string, string> = new Map<string, string>()
     private commandHandlers: Map<string, HandlerFn[]> = new Map<string, HandlerFn[]>()
 
     public constructor(private token: string) {
@@ -34,20 +36,36 @@ export default class MiniCommand {
     }
 
     public on(command: string, handler: HandlerFn) {
+        this.currentCommand = command
         this.commandHandlers[command] = [handler]
 
+        return this.chainActions()
+    }
+
+    private chainActions() {
         return {
-            before: this.before,
-            next: this.after,
+            before: this.before.bind(this),
+            next: this.after.bind(this),
+            alias: this.alias.bind(this)
         }
+    }
+
+    private alias(name: string) {
+        this.commandAliases[name] = this.currentCommand
+
+        return this.chainActions()
     }
 
     private after(...handlers: HandlerFn[]) {
         this.commandHandlers[this.currentCommand].push(...handlers)
+
+        return this.chainActions()
     }
 
     private before(...handlers: HandlerFn[]) {
         this.commandHandlers[this.currentCommand].unshift(...handlers)
+
+        return this.chainActions()
     }
 
     private async onMessage(message: Message) {
@@ -57,7 +75,15 @@ export default class MiniCommand {
         let command = parseCommand(message.content)
         if (!command) throw error()
 
-        let handlers = this.commandHandlers[command?.command]
+        let handlers: HandlerFn[]
+        if (!this.commandHandlers.has(command?.command)) {
+            let aliasedCommand = this.commandAliases[command?.command]
+
+            handlers = this.commandHandlers[aliasedCommand]
+        } else {
+            handlers = this.commandHandlers[command?.command]
+        }
+
         if (!handlers) throw error()
 
         let context: CommandContext = {
