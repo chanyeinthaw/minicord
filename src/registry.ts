@@ -1,5 +1,6 @@
 import '@handlers/exclusive-roles'
 import '@handlers/category-default-permissions'
+import '@handlers/categories'
 
 import {app} from "@app/index";
 import createSpace from "@handlers/create-space";
