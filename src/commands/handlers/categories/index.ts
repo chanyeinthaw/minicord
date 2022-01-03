@@ -2,6 +2,7 @@ import {app} from "@app/index";
 import {createCategory} from "@handlers/categories/create";
 import {listCategories} from "@handlers/categories/list";
 import {deleteCategories} from "@handlers/categories/delete";
+import {syncCategories} from "@handlers/categories/sync";
 
 app.on('categories', async (ctx) => {
     let [spaceRoleId, subCommand, ...args] = ctx.args as string[]
@@ -16,6 +17,7 @@ app.on('categories', async (ctx) => {
         select: {
             id: true,
             name: true,
+            roleId: true,
             categories: true,
             categoryDefaultPermissions: true
         }
@@ -30,5 +32,6 @@ app.on('categories', async (ctx) => {
         case 'list': return listCategories(ctx, space)
         case 'del':
         case 'delete': return deleteCategories(ctx, space)
+        case 'sync': return syncCategories(ctx, space)
     }
 }).alias('c')
