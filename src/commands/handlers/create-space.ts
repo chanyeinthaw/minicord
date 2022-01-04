@@ -11,7 +11,7 @@ export default async function createSpace(ctx: CommandContext) {
     })
 
     let role = await ctx.guild!.roles.create({
-        name: `s-${(+space.id).toString(2).padEnd(4, '0')}`
+        name: `s-${(space.id + 1).toString(2).padEnd(4, '0')}`
     })
 
     await ctx.prisma.space.update({

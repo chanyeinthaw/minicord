@@ -14,7 +14,7 @@ datasource db {
 model Visa {
   id     Int     @id @default(autoincrement())
   roleId String?  @unique
-  isRoot Boolean @default(true)
+  isRoot Boolean @default(false)
 
   spaces VisasOnSpaces[]
 }
