@@ -106,27 +106,26 @@ export default class MiniCommand {
 
         let error = () => new Error('Invalid command!')
         let parsed = this.parse(message.content)
-        console.log(parsed)
-        // if (!parsed?.command) throw error()
-        //
-        // let handlers: HandlerFn[] = this.commandHandlers[parsed?.command]
-        // if (!handlers) throw error()
-        //
-        // let context: CommandContext = {
-        //     prisma: this.prisma,
-        //     message: message,
-        //     guild: message.guild,
-        //     discord: this.client,
-        //     args: [],
-        //     params: parsed.params,
-        //     forwardedData: {}
-        // }
-        //
-        // handlers.unshift(...this.defaultMiddlewares)
-        //
-        // for(let handler of handlers) {
-        //     await handler(context)
-        // }
+        if (!parsed?.command) throw error()
+
+        let handlers: HandlerFn[] = this.commandHandlers[parsed?.command]
+        if (!handlers) throw error()
+
+        let context: CommandContext = {
+            prisma: this.prisma,
+            message: message,
+            guild: message.guild,
+            discord: this.client,
+            args: [],
+            params: parsed.params,
+            forwardedData: {}
+        }
+
+        handlers.unshift(...this.defaultMiddlewares)
+
+        for(let handler of handlers) {
+            await handler(context)
+        }
     }
 
     public start() {
