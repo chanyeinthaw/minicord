@@ -24,6 +24,7 @@ export default class MiniCommand {
     private commandPatterns: Record<string, string> = {}
 
     private paramRegex = /(?=:)(.*?)(?= |$)/g
+    private paramOptionalRegex = /(?=\?)(.*?)(?= |$)/g
 
     public constructor(private token: string) {
         this.client = new Client({
@@ -45,11 +46,20 @@ export default class MiniCommand {
 
     public on(command: string, handler: HandlerFn) {
         let commandPattern = command.replace(this.paramRegex, _ => '(.+)')
+            .replace(/ (?=\?)/g, _ => '.{0,1}')
+            .replace(this.paramOptionalRegex, _ => '(.*)')
         this.currentCommand = commandPattern
         this.commandHandlers[commandPattern] = [handler]
 
         this.paramRegex.lastIndex = 0
-        this.commandParameterNames[commandPattern] = command.match(this.paramRegex)?.map(x => x.replace(':', '')) ?? []
+        this.paramOptionalRegex.lastIndex = 0
+
+        let commandParameterNames = command.match(this.paramRegex)?.map(x => x.replace(':', '')) ?? []
+            commandParameterNames.push(
+                ...(command.match(this.paramOptionalRegex)?.map(x => x.replace('?', '')) ?? [])
+            )
+
+        this.commandParameterNames[commandPattern] = commandParameterNames
         this.commandPatterns[commandPattern.substring(0, commandPattern.indexOf(' '))] = commandPattern
 
         return this.chainActions()

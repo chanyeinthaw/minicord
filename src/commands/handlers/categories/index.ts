@@ -4,34 +4,7 @@ import {listCategories} from "@handlers/categories/list";
 import {deleteCategories} from "@handlers/categories/delete";
 import {syncCategories} from "@handlers/categories/sync";
 
-app.on('categories', async (ctx) => {
-    let [spaceRoleId, subCommand, ...args] = ctx.args as string[]
-
-    if (ctx.args.length < 2) throw new Error('Invalid args!')
-    ctx.args = [spaceRoleId, ...args]
-
-    let space = await ctx.prisma.space.findFirst({
-        where: {
-            roleId: spaceRoleId ?? null
-        },
-        select: {
-            id: true,
-            name: true,
-            roleId: true,
-            categories: true,
-            categoryDefaultPermissions: true
-        }
-    })
-
-    if (!space) throw new Error('Invalid space!')
-
-    switch (subCommand) {
-        case 'c':
-        case 'create': return createCategory(ctx, space)
-        case 'ls':
-        case 'list': return listCategories(ctx, space)
-        case 'del':
-        case 'delete': return deleteCategories(ctx, space)
-        case 'sync': return syncCategories(ctx, space)
-    }
-}).alias('c')
+app.on('categories :spaceRoleId sync ?except', syncCategories)
+app.on('categories :spaceRoleId create :name', createCategory)
+app.on('categories :spaceRoleId delete :categoryId', deleteCategories)
+app.on('categories :spaceRoleId list', listCategories)

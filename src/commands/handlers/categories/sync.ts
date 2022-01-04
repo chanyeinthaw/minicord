@@ -1,9 +1,13 @@
 import {CommandContext} from "@lib/mini-command";
-import {ChannelTypes} from "discord.js/typings/enums";
-import {GuildChannel, MessageEmbed, Permissions, StoreChannel} from "discord.js";
+import {GuildChannel} from "discord.js";
+import * as spaces from "@app/repositories/spaces";
 
-export async function syncCategories(ctx: CommandContext, space: any) {
-    let [_, ...except] = ctx.args as string[]
+export async function syncCategories(ctx: CommandContext) {
+    let {spaceRoleId, except} = ctx.params
+    let space = await spaces.find(spaceRoleId)
+
+    except = except?.split(' ') ?? []
+
     let categoryIds = space.categories.map(c => c.discordId).filter(c => except.indexOf(c) < 0)
     let categories = await ctx.guild?.channels.cache.filter(c => categoryIds.indexOf(c.id) > -1 && c.type === 'GUILD_CATEGORY')
 

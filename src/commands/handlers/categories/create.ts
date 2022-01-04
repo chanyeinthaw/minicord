@@ -1,9 +1,11 @@
 import {CommandContext} from "@lib/mini-command";
 import {ChannelTypes} from "discord.js/typings/enums";
 import {Permissions} from "discord.js";
+import * as spaces from "@app/repositories/spaces";
 
-export async function createCategory(ctx: CommandContext, space: any) {
-    let [spaceRoleId, name] = ctx.args as string[]
+export async function createCategory(ctx: CommandContext) {
+    let {spaceRoleId, name} = ctx.params
+    let space = await spaces.find(spaceRoleId)
 
     let defaultPermissionOverwrites = space!.categoryDefaultPermissions.reduce((acc, cv) => {
         let overwrite = acc[cv.roleId] ?? { id: cv.roleId, allow:[], deny: []}

@@ -12,6 +12,7 @@ export async function find(spaceRoleId: any) {
         select: {
             id: true,
             name: true,
+            roleId: true,
             exclusiveRoles: true,
             categoryDefaultPermissions: true,
             categories: true

@@ -1,10 +1,9 @@
 import {CommandContext} from "@lib/mini-command";
-import {ChannelTypes} from "discord.js/typings/enums";
-import {MessageEmbed, Permissions} from "discord.js";
+import * as spaces from "@app/repositories/spaces";
 
-export async function deleteCategories(ctx: CommandContext, space: any) {
-    let [_, categoryId] = ctx.args as string[]
-    if (ctx.args.length < 2) throw new Error('Invalid args!')
+export async function deleteCategories(ctx: CommandContext) {
+    let {spaceRoleId, categoryId} = ctx.params
+    let space = await spaces.find(spaceRoleId)
 
     if (!space.categories.find(c => c.discordId === categoryId)) throw new Error('Invalid category id!')
 
