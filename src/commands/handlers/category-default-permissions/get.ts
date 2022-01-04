@@ -1,25 +1,9 @@
 import {MessageEmbed} from "discord.js";
+import * as spaces from '@app/repositories/spaces'
 
 export default async function getCategoryDefaultPermissions(ctx) {
-    if ((ctx.args as string[]).length < 1) throw new Error('Invalid args')
-    let [spaceRoleId] = ctx.args as string[]
-    // @ts-ignore
-
-    let space = await ctx.prisma.space.findFirst({
-        where: {
-            roleId: spaceRoleId ?? null
-        },
-        select: {
-            categoryDefaultPermissions: {
-                select: {
-                    roleId: true,
-                    permission: true,
-                    type: true
-                }
-            }
-        }
-    })
-    if (!space) throw new Error('Invalid space!')
+    let { spaceRoleId } = ctx.params
+    let space = await spaces.find(spaceRoleId)
 
     return ctx.message.reply({
         embeds: [

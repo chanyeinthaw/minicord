@@ -1,6 +1,5 @@
 export default async function removeCategoryDefaultPermission(ctx) {
-    if ((ctx.args as string[]).length < 4) throw new Error('Invalid args!')
-    let [spaceRoleId, roleId, permission, type] = ctx.args as string[]
+    let {spaceRoleId, roleId, permission, type} = ctx.params
 
     // @ts-ignore
     type = type === 'allow' ? 1 : 0

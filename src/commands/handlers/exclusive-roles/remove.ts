@@ -1,7 +1,7 @@
 import {CommandContext} from "@lib/mini-command";
 
 export default async function removeExclusiveRoles(ctx: CommandContext){
-    let {spaceRoleId, roles} = ctx.params
+    let {roles} = ctx.params
 
     if (roles.length > 0) await ctx.prisma.exclusiveRole.deleteMany({
         where: {

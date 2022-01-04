@@ -1,8 +1,7 @@
 import {Permissions} from "discord.js";
 
 export default async function addCategoryDefaultPermission(ctx) {
-    if ((ctx.args as string[]).length < 4) throw new Error('Invalid args!')
-    let [spaceRoleId, roleId, permission, type] = ctx.args as string[]
+    let { spaceRoleId, roleId, permission, type } = ctx.params
 
     let permissions = Object.keys(Permissions.FLAGS)
     if (permissions.indexOf(permission) < 0) throw new Error('Invalid permission!')
