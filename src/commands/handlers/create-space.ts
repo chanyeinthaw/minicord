@@ -1,8 +1,8 @@
 import {CommandContext} from "@lib/mini-command";
 
 export default async function createSpace(ctx: CommandContext) {
-    if ((ctx.args as string[]).length < 1) throw new Error('Invalid args!')
-    let [name] = ctx.args as [string]
+    if (!ctx.params?.name) throw new Error('Invalid args!')
+    let {name} = ctx.params
 
     let space = await ctx.prisma.space.create({
         data: {
