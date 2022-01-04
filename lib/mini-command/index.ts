@@ -1,5 +1,4 @@
 import {Client, Guild, Intents, Message} from "discord.js";
-import {parseCommand} from "./parse";
 import {PrismaClient} from "@prisma/client";
 
 export type CommandContext = {
@@ -8,6 +7,7 @@ export type CommandContext = {
     message: Message,
     guild: Guild | null,
     args: any[]|Record<any, any>,
+    params: Record<any, any>
     forwardedData: Record<any, any>
 }
 
@@ -19,8 +19,11 @@ export default class MiniCommand {
     private currentCommand: string = ''
 
     private defaultMiddlewares: HandlerFn[] = []
-    private commandAliases: Record<string, string> = {}
     private commandHandlers: Record<string, HandlerFn[]> = {}
+    private commandParameterNames: Record<string, string[]> = {}
+    private commandPatterns: Record<string, string> = {}
+
+    private paramRegex = /(?=:)(.*?)(?= |$)/g
 
     public constructor(private token: string) {
         this.client = new Client({
@@ -41,8 +44,13 @@ export default class MiniCommand {
     }
 
     public on(command: string, handler: HandlerFn) {
-        this.currentCommand = command
-        this.commandHandlers[command] = [handler]
+        let commandPattern = command.replace(this.paramRegex, _ => '(.+)')
+        this.currentCommand = commandPattern
+        this.commandHandlers[commandPattern] = [handler]
+
+        this.paramRegex.lastIndex = 0
+        this.commandParameterNames[commandPattern] = command.match(this.paramRegex)?.map(x => x.replace(':', '')) ?? []
+        this.commandPatterns[commandPattern.substring(0, commandPattern.indexOf(' '))] = commandPattern
 
         return this.chainActions()
     }
@@ -51,14 +59,7 @@ export default class MiniCommand {
         return {
             before: this.before.bind(this),
             next: this.after.bind(this),
-            alias: this.alias.bind(this)
         }
-    }
-
-    private alias(name: string) {
-        this.commandAliases[name] = this.currentCommand
-
-        return this.chainActions()
     }
 
     private after(...handlers: HandlerFn[]) {
@@ -73,38 +74,59 @@ export default class MiniCommand {
         return this.chainActions()
     }
 
+    private parse(message: string) {
+        if (!message.startsWith('mc')) return
+
+        message = message.replace(/^mc|<@&|<@!|>/g, '').trim()
+
+        let params: any = {}
+        let command: string | undefined = undefined
+
+        let foundMatches: string[] = []
+        for(let commandPattern in this.commandHandlers) {
+            let regex = new RegExp(commandPattern, 'g')
+            let matches = regex.exec(message)
+
+            if (matches) {
+                command = commandPattern
+                foundMatches = matches.splice(1)
+            }
+        }
+
+        let index = 0
+        for(let match of foundMatches) {
+            params[this.commandParameterNames[command!][index++]] = match
+        }
+
+        return { command, params }
+    }
+
     private async onMessage(message: Message) {
         if (message.author.id === this.client.user?.id) return
 
         let error = () => new Error('Invalid command!')
-        let command = parseCommand(message.content)
-        if (!command) throw error()
-
-        let handlers: HandlerFn[]
-        if (!this.commandHandlers.hasOwnProperty(command?.command)) {
-            let aliasedCommand = this.commandAliases[command?.command]
-
-            handlers = this.commandHandlers[aliasedCommand]
-        } else {
-            handlers = this.commandHandlers[command?.command]
-        }
-
-        if (!handlers) throw error()
-
-        let context: CommandContext = {
-            prisma: this.prisma,
-            message: message,
-            guild: message.guild,
-            discord: this.client,
-            args: command?.args,
-            forwardedData: {}
-        }
-
-        handlers.unshift(...this.defaultMiddlewares)
-
-        for(let handler of handlers) {
-            await handler(context)
-        }
+        let parsed = this.parse(message.content)
+        console.log(parsed)
+        // if (!parsed?.command) throw error()
+        //
+        // let handlers: HandlerFn[] = this.commandHandlers[parsed?.command]
+        // if (!handlers) throw error()
+        //
+        // let context: CommandContext = {
+        //     prisma: this.prisma,
+        //     message: message,
+        //     guild: message.guild,
+        //     discord: this.client,
+        //     args: [],
+        //     params: parsed.params,
+        //     forwardedData: {}
+        // }
+        //
+        // handlers.unshift(...this.defaultMiddlewares)
+        //
+        // for(let handler of handlers) {
+        //     await handler(context)
+        // }
     }
 
     public start() {
