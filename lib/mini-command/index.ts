@@ -18,6 +18,7 @@ export default class MiniCommand {
     private readonly prisma: PrismaClient
     private currentCommand: string = ''
 
+    private _middlewares: Record<string, HandlerFn> = {}
     private defaultMiddlewares: HandlerFn[] = []
     private commandHandlers: Record<string, HandlerFn[]> = {}
     private commandParameterNames: Record<string, string[]> = {}
@@ -40,8 +41,14 @@ export default class MiniCommand {
         this.prisma = new PrismaClient()
     }
 
-    public middleware(...handlers: HandlerFn[]) {
-        this.defaultMiddlewares.push(...handlers)
+    public middlewares(middlewares: Record<string, HandlerFn>) {
+        this._middlewares = middlewares
+    }
+
+    public defaultMiddleware(...middlewares: string[]) {
+        for(let middleware of middlewares) {
+            this._middlewares[middleware] && this.defaultMiddlewares.push(this._middlewares[middleware])
+        }
     }
 
     public on(command: string, handler: HandlerFn) {
@@ -69,7 +76,14 @@ export default class MiniCommand {
         return {
             before: this.before.bind(this),
             next: this.after.bind(this),
+            middleware: this.setMiddleware.bind(this)
         }
+    }
+
+    private setMiddleware(middleware: string) {
+        this.commandHandlers[this.currentCommand].push(this._middlewares[middleware])
+
+        return this.chainActions()
     }
 
     private after(...handlers: HandlerFn[]) {

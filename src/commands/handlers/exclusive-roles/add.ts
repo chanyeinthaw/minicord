@@ -12,8 +12,7 @@ export default async function addExclusiveRole(ctx: CommandContext){
 
     if (discordRoles?.size !== roles.length) throw new Error('Invalid roles')
 
-    roles = roles.splice(1)
-    roles = roles.filter(roleId => !space!.exclusiveRoles.find(role => role.roleId === roleId))
+    roles = roles.filter(roleId => space!.exclusiveRoles.find(role => role.roleId === roleId) === undefined)
 
     if (roles.length > 0) await ctx.prisma.space.update({
         where: {
