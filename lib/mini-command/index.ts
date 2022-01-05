@@ -81,7 +81,7 @@ export default class MiniCommand {
     }
 
     private setMiddleware(middleware: string) {
-        this.commandHandlers[this.currentCommand].push(this._middlewares[middleware])
+        this.commandHandlers[this.currentCommand].unshift(this._middlewares[middleware])
 
         return this.chainActions()
     }
