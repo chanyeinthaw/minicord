@@ -1,5 +1,4 @@
 import {CommandContext} from "@lib/mini-command";
-import {ChannelTypes} from "discord.js/typings/enums";
 import {Permissions} from "discord.js";
 import * as spaces from "@app/repositories/spaces";
 
@@ -23,7 +22,7 @@ export async function createCategory(ctx: CommandContext) {
 
     let guild = ctx.guild
     let category = await guild?.channels.create(name, {
-        type: ChannelTypes.GUILD_CATEGORY,
+        type: 'GUILD_CATEGORY',
         permissionOverwrites: [{
             id: spaceRoleId,
             allow: [Permissions.FLAGS.VIEW_CHANNEL]
