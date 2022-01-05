@@ -87,7 +87,7 @@ export default class MiniCommand {
     private parse(message: string) {
         if (!message.startsWith('mc')) return
 
-        message = message.replace(/^mc|<@&|<@!|>/g, '').trim()
+        message = message.replace(/^mc|<@&|<@!|>/g, '').replace('<@', '').trim()
 
         let params: any = {}
         let command: string | undefined = undefined

@@ -11,14 +11,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Visa {
-  id     Int     @id @default(autoincrement())
-  roleId String?  @unique
-  isRoot Boolean @default(false)
-
-  spaces VisasOnSpaces[]
-}
-
 model Space {
   id     Int    @id @default(autoincrement())
   name   String
@@ -26,17 +18,23 @@ model Space {
 
   exclusiveRoles ExclusiveRole[]
   categories     Category[]
-  visas  VisasOnSpaces[]
   categoryDefaultPermissions CategoryDefaultPermission[]
+  users UsersOnSpaces[]
 }
 
-model VisasOnSpaces {
-  visa    Visa  @relation(fields: [visaId], references: [id], onDelete: Cascade)
-  visaId  Int
-  space   Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-  spaceId Int
+model User {
+  id String @id
+  isRoot Boolean @default(false)
+  spaces UsersOnSpaces[]
+}
 
-  @@id([visaId, spaceId])
+model UsersOnSpaces {
+  spaceId Int
+  space Space @relation(fields: [spaceId], references: [id])
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, spaceId])
 }
 
 model ExclusiveRole {
