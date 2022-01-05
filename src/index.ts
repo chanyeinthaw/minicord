@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import MiniCommand from "@lib/mini-command";
+import '@app/express'
 
 let env = process.env.NODE_ENV ? `.${process.env.NODE_ENV}` : ''
 dotenv.config({ path: process.cwd() + '/.env' + env })
