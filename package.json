@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "build": "prisma generate; tsc",
-    "start": "cross-env NODE_ENV=production node -r ts-node/register/transpile-only -r tsconfig-paths/register build/src/index.js"
+    "build": "prisma generate",
+    "start": "ts-node -r tsconfig-paths/register src/express.ts",
+    "worker": "ts-node -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "3.7.0",
