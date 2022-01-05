@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "prisma generate; tsc",
-    "start": "cross-env NODE_ENV=production node -r tsconfig-paths/register build/index.js"
+    "start": "cross-env NODE_ENV=production node -r tsconfig-paths/register build/src/index.js"
   },
   "dependencies": {
     "@prisma/client": "3.7.0",
