@@ -99,8 +99,6 @@ export default class MiniCommand {
     }
 
     private parse(message: string) {
-        if (!message.startsWith('mc')) return
-
         message = message.replace(/^mc|<@&|<@!|>/g, '').replace('<@', '').trim()
 
         let params: any = {}
@@ -126,6 +124,7 @@ export default class MiniCommand {
     }
 
     private async onMessage(message: Message) {
+        if (!message.content.startsWith('mc')) return
         if (message.author.id === this.client.user?.id) return
 
         let error = () => new Error('Invalid command!')
