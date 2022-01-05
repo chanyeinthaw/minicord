@@ -21,6 +21,7 @@ export default class MiniCommand {
     private _middlewares: Record<string, HandlerFn> = {}
     private defaultMiddlewares: HandlerFn[] = []
     private commandHandlers: Record<string, HandlerFn[]> = {}
+    private commandMiddlewares: Record<string, string[]> = {}
     private commandParameterNames: Record<string, string[]> = {}
     private commandPatterns: Record<string, string> = {}
 
@@ -57,6 +58,7 @@ export default class MiniCommand {
             .replace(this.paramOptionalRegex, _ => '(.*)')
         this.currentCommand = commandPattern
         this.commandHandlers[commandPattern] = [handler]
+        this.commandMiddlewares[commandPattern] = []
 
         this.paramRegex.lastIndex = 0
         this.paramOptionalRegex.lastIndex = 0
@@ -74,26 +76,12 @@ export default class MiniCommand {
 
     private chainActions() {
         return {
-            before: this.before.bind(this),
-            next: this.after.bind(this),
             middleware: this.setMiddleware.bind(this)
         }
     }
 
     private setMiddleware(middleware: string) {
-        this.commandHandlers[this.currentCommand].unshift(this._middlewares[middleware])
-
-        return this.chainActions()
-    }
-
-    private after(...handlers: HandlerFn[]) {
-        this.commandHandlers[this.currentCommand].push(...handlers)
-
-        return this.chainActions()
-    }
-
-    private before(...handlers: HandlerFn[]) {
-        this.commandHandlers[this.currentCommand].unshift(...handlers)
+        this.commandMiddlewares[this.currentCommand].push(middleware)
 
         return this.chainActions()
     }
@@ -132,6 +120,7 @@ export default class MiniCommand {
         if (!parsed?.command) throw error()
 
         let handlers: HandlerFn[] = this.commandHandlers[parsed?.command]
+        let mws: string[] = this.commandMiddlewares[parsed?.command]
         if (!handlers) throw error()
 
         let context: CommandContext = {
@@ -144,7 +133,13 @@ export default class MiniCommand {
             forwardedData: {}
         }
 
-        handlers.unshift(...this.defaultMiddlewares)
+        for(let defaultMw of this.defaultMiddlewares) {
+            await defaultMw(context)
+        }
+
+        for(let mw of mws) {
+            await this._middlewares[mw](context)
+        }
 
         for(let handler of handlers) {
             await handler(context)

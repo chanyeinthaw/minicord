@@ -16,8 +16,8 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "esModuleInterop": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
+    "sourceMap": false,
+    "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
