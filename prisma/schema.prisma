@@ -63,7 +63,7 @@ model CategoryDefaultPermission {
   spaceId Int
   space Space @relation(fields: [spaceId], references: [id])
 
-  @@id([roleId, spaceId, type])
+  @@id([roleId, spaceId, type, permission])
 }
 
 model Permission {

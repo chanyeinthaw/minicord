@@ -59,10 +59,10 @@ app.on('unroot :userId', async (ctx) => {
     return ctx.message.reply('\`Unrooted!\`')
 }).middleware('auth')
 
-app.on('go :spaceRoleId', async (ctx) => {
-    let {spaceRoleId} = ctx.params
+app.on('go :spaceName', async (ctx) => {
+    let {spaceName} = ctx.params
 
-    let space = await find(spaceRoleId)
+    let space = await find(spaceName, 'name')
     let user = ctx.message.member
     let currentSpaceRole = user?.roles.cache.find(s => s.name.startsWith('s-'))
 
@@ -76,7 +76,7 @@ app.on('go :spaceRoleId', async (ctx) => {
             await user?.roles.remove(toRemove)
         }
 
-        await user?.roles.add(spaceRoleId)
+        await user?.roles.add(space!.roleId!)
     }
 
     return ctx.message.delete()

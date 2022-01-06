@@ -11,10 +11,10 @@ export async function findAll() {
     })
 }
 
-export async function find(spaceRoleId: any) {
+export async function find(spaceRoleId: any, key = 'roleId') {
     let space = await prisma.space.findFirst({
         where: {
-            roleId: {
+            [key]: {
                 equals: spaceRoleId ?? null
             },
         },
