@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "prisma generate",
-    "start": "ts-node --transpile-only -r tsconfig-paths/register src/index.ts",
+    "start": "ts-node --transpile-only -r tsconfig-paths/register src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "3.7.0",
