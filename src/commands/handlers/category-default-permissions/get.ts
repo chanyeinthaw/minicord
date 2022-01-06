@@ -3,7 +3,7 @@ import * as spaces from '@app/repositories/spaces'
 
 export default async function getCategoryDefaultPermissions(ctx) {
     let { spaceRoleId } = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     return ctx.message.reply({
         embeds: [

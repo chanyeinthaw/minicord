@@ -4,7 +4,7 @@ import * as spaces from '@app/repositories/spaces'
 
 export default async function getExclusiveRoles(ctx: CommandContext){
     let {spaceRoleId} = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
     let allRoles = ctx.guild!.roles.cache
     let exclusiveRoles = space!.exclusiveRoles.map(r => r.roleId),
         deletedRoles = exclusiveRoles.filter(id => !allRoles.find(role => role.id === id))

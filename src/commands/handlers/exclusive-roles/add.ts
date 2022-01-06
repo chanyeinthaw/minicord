@@ -3,7 +3,7 @@ import * as spaces from '@app/repositories/spaces'
 
 export default async function addExclusiveRole(ctx: CommandContext){
     let { spaceRoleId, roles } = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
     roles = roles.split(' ')
 
     let discordRoles = await ctx.guild?.roles.cache.filter(role => {

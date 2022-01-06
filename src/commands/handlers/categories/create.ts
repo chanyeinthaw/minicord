@@ -4,7 +4,7 @@ import * as spaces from "@app/repositories/spaces";
 
 export async function createCategory(ctx: CommandContext) {
     let {spaceRoleId, name} = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     let defaultPermissionOverwrites = space!.categoryDefaultPermissions.reduce((acc, cv) => {
         let overwrite = acc[cv.roleId] ?? { id: cv.roleId, allow:[], deny: []}
@@ -24,7 +24,7 @@ export async function createCategory(ctx: CommandContext) {
     let category = await guild?.channels.create(name, {
         type: 'GUILD_CATEGORY',
         permissionOverwrites: [{
-            id: spaceRoleId,
+            id: space.roleId,
             allow: [Permissions.FLAGS.VIEW_CHANNEL]
         }, ...(
            Object.keys(defaultPermissionOverwrites).map(key => defaultPermissionOverwrites[key])

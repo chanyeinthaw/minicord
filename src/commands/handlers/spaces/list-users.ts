@@ -4,7 +4,7 @@ import {MessageEmbed} from "discord.js";
 
 export async function listUsers(ctx: CommandContext) {
     let { spaceRoleId } = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     return ctx.message.reply({
         embeds: [new MessageEmbed(

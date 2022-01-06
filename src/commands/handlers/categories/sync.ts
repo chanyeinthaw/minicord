@@ -4,7 +4,7 @@ import * as spaces from "@app/repositories/spaces";
 
 export async function syncCategories(ctx: CommandContext) {
     let {spaceRoleId, except} = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     except = except?.split(' ') ?? []
 

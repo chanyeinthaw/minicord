@@ -7,7 +7,7 @@ export async function addUser(ctx: CommandContext) {
 
     userId = [...new Set(userId.split(' '))]
 
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     checkUsers(userId, ctx.guild)
 

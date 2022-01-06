@@ -10,7 +10,7 @@ export default async function addCategoryDefaultPermission(ctx) {
 
     await ctx.prisma.space.update({
         where: {
-            roleId: spaceRoleId ?? null
+            name: spaceRoleId ?? null
         },
         data: {
             categoryDefaultPermissions: {

@@ -3,7 +3,7 @@ import * as spaces from "@app/repositories/spaces";
 
 export async function deleteCategories(ctx: CommandContext) {
     let {spaceRoleId, categoryId} = ctx.params
-    let space = await spaces.find(spaceRoleId)
+    let space = await spaces.find(spaceRoleId, 'name')
 
     if (!space.categories.find(c => c.discordId === categoryId)) throw new Error('Invalid category id!')
 
